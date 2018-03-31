@@ -7,7 +7,7 @@ var fs = require("fs");
 var request = require("request");
 var keys = require("./keys.js");
 var twitter = require("twitter");
-var spotify = require("node-spotify-api");
+var spot = require("node-spotify-api");
 
 //Saving userInputs to a variable
 var liriSelector = process.argv[2];
@@ -62,7 +62,15 @@ function displayTwitter() {
             console.log("error: " + error)
         }
         else {
-            console.log(tweets);
+            for (var i = 0; i<tweets.length; i++) {
+                var created = "";
+                var message = "";
+                created = tweets[i].created_at;
+                console.log("Created at: " + created);
+                message = tweets[i].text;
+                console.log("Tweet's message: " + message);
+                console.log("------ Next Tweet ------")
+            }
         }
     })
 }
@@ -70,6 +78,7 @@ function displayTwitter() {
 function displaySpotify() {
     //Shows artists, song's name, preview link of song from spotify, and album
     //If no song provided then default to 'The Sign' by Ace of Base
+    var spotify = new spotify(keys.spotify);
 
 }
 
