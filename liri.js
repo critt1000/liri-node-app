@@ -16,37 +16,37 @@ var input = [];
 
 
 //getting user search criteria after the selector
-for (var i = 3; i<userInput.length; i++) {
+for (var i = 3; i < userInput.length; i++) {
     debugger;
     input.push(userInput[i]);
 }
 
 //switch case for user inputs selector
-switch(liriSelector) {
+switch (liriSelector) {
     case "my-tweets":
 
-    break;
+        break;
 
     case "spotify-this-song":
 
-    break;
+        break;
 
     case "movie-this":
         displayMovie();
-    break;
+        break;
 
     case "do-what-it-says":
 
-    break;
+        break;
 
     default:
         console.log("Please use a command: my-tweets, spitify-this-song, movie-this, or do-what-it-says")
-    break;
+        break;
 }
 
 function displayTwitter() {
     //Get and display latest 20 tweets
-      
+
 }
 
 function displaySpotify() {
@@ -57,9 +57,14 @@ function displaySpotify() {
 function displayMovie() {
     //Will return Title of Movie, Year of release, IMDB rating, Rotten Tomatoes Rating, Country produced, Language, Plot, Actors
     //If no movie provided defaults to 'Mr. Nobody'
-    var movieName = input;
-    request("http://www.omdbapi.com/?t=" + movieName + "&y=plot=short&tomatoes=true&apikey=trilogy", function(error, response, body){
-        
+    if (process.argv > 3) {
+        var movieName = input;
+    }
+    else {
+        movieName = "Mr.+Nobody"
+    }
+    request("http://www.omdbapi.com/?t=" + movieName + "&y=plot=short&tomatoes=true&apikey=trilogy", function (error, response, body) {
+
         //If no errors and a 200 response code, successful request
         if (!error && response.statusCode === 200) {
             console.log("The title is: " + JSON.parse(body).Title);
@@ -75,6 +80,7 @@ function displayMovie() {
             console.log("Error: " + error);
         }
     })
+
 }
 
 function doWhat() {
