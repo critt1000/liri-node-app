@@ -52,15 +52,14 @@ function displayTwitter() {
 function displaySpotify() {
     //Shows artists, song's name, preview link of song from spotify, and album
     //If no song provided then default to 'The Sign' by Ace of Base
+
 }
 
 function displayMovie() {
     //Will return Title of Movie, Year of release, IMDB rating, Rotten Tomatoes Rating, Country produced, Language, Plot, Actors
     //If no movie provided defaults to 'Mr. Nobody'
-    if (process.argv > 3) {
-        var movieName = input;
-    }
-    else {
+    var movieName = input
+    if (!process.argv[3]) {
         movieName = "Mr.+Nobody"
     }
     request("http://www.omdbapi.com/?t=" + movieName + "&y=plot=short&tomatoes=true&apikey=trilogy", function (error, response, body) {
@@ -83,6 +82,15 @@ function displayMovie() {
 
 }
 
-function doWhat() {
-    //will use the text from random.txt file for a spotify-this-song command
-}
+// function doWhat() {
+//     //will use the text from random.txt file for a spotify-this-song command
+//     fs.readFile("random.txt", "utf-8", function(error, data){
+
+//         //Check for errors and log if error is encountered
+//         if (error) {
+//             return console.log(error);
+//         }
+
+//         displaySpotify(data);
+//     })
+// }
