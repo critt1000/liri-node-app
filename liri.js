@@ -2,6 +2,7 @@
 
 //Setting up and grabbing required data
 require("dotenv").config();
+
 var fs = require("fs");
 var request = require("request");
 var keys = require("./keys.js");
@@ -13,8 +14,6 @@ var liriSelector = process.argv[2];
 var userInput = process.argv;
 var input = [];
 
-
-
 //getting user search criteria after the selector
 for (var i = 3; i < userInput.length; i++) {
     debugger;
@@ -24,7 +23,7 @@ for (var i = 3; i < userInput.length; i++) {
 //switch case for user inputs selector
 switch (liriSelector) {
     case "my-tweets":
-
+        displayTwitter();
         break;
 
     case "spotify-this-song":
@@ -46,7 +45,26 @@ switch (liriSelector) {
 
 function displayTwitter() {
     //Get and display latest 20 tweets
+    
+    //getting twitter api keys
+    var client = new twitter(keys.twitter);
 
+    //setting parameters
+    var param = {
+        screen_name: 'critt1000',
+        count: 20
+    };
+
+    //Getting the 20 tweets
+    client.get('statuses/user_timeline', param, function(error, tweets, response){
+
+        if (error) {
+            console.log("error: " + error)
+        }
+        else {
+            console.log(tweets);
+        }
+    })
 }
 
 function displaySpotify() {
