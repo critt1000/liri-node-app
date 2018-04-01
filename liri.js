@@ -1,4 +1,4 @@
-//import { userInfo } from "os";
+import { pseudoRandomBytes } from "crypto";
 
 //Setting up and grabbing required data
 require("dotenv").config();
@@ -6,8 +6,8 @@ require("dotenv").config();
 var fs = require("fs");
 var request = require("request");
 var keys = require("./keys.js");
-var twitter = require("twitter");
-var spot = require("node-spotify-api");
+var Twitter = require("twitter");
+var Spotify = require("node-spotify-api");
 
 //Saving userInputs to a variable
 var liriSelector = process.argv[2];
@@ -16,7 +16,6 @@ var input = [];
 
 //getting user search criteria after the selector
 for (var i = 3; i < userInput.length; i++) {
-    debugger;
     input.push(userInput[i]);
 }
 
@@ -27,7 +26,7 @@ switch (liriSelector) {
         break;
 
     case "spotify-this-song":
-
+        displaySpotify();
         break;
 
     case "movie-this":
@@ -35,7 +34,7 @@ switch (liriSelector) {
         break;
 
     case "do-what-it-says":
-
+        dowhat();
         break;
 
     default:
@@ -47,7 +46,7 @@ function displayTwitter() {
     //Get and display latest 20 tweets
     
     //getting twitter api keys
-    var client = new twitter(keys.twitter);
+    var client = new Twitter(keys.twitter);
 
     //setting parameters
     var param = {
@@ -59,7 +58,7 @@ function displayTwitter() {
     client.get('statuses/user_timeline', param, function(error, tweets, response){
 
         if (error) {
-            console.log("error: " + error)
+            return console.log("error: " + error)
         }
         else {
             for (var i = 0; i<tweets.length; i++) {
@@ -74,11 +73,26 @@ function displayTwitter() {
         }
     })
 }
-
+//returned JSON object having issues
+//need to go thru the returned data set and print artists, title, preview link and album data to terminal
 function displaySpotify() {
     //Shows artists, song's name, preview link of song from spotify, and album
     //If no song provided then default to 'The Sign' by Ace of Base
-    var spotify = new spotify(keys.spotify);
+    var spotify = new Spotify(keys.spotify);
+
+    var songSearch = input;
+    if (!process.argv[3]) {
+        songSearch = "The Sign";
+    }
+
+    spotify.search({ type: "track", query: songSearch, limit: 20 }, function (error, data) {
+        if (error) {
+            return console.log("Error: " + error);
+        }
+        else {
+            console.log(data);
+        }
+    });
 
 }
 
@@ -103,21 +117,23 @@ function displayMovie() {
             console.log("Actors:" + JSON.parse(body).Actors);
         }
         else {
-            console.log("Error: " + error);
+            return console.log("Error: " + error);
         }
     })
 
 }
 
-// function doWhat() {
-//     //will use the text from random.txt file for a spotify-this-song command
-//     fs.readFile("random.txt", "utf-8", function(error, data){
+//needs to be reworked when spotify function is completed
+function doWhat() {
+    //will use the text from random.txt file for a spotify-this-song command
+    fs.readFile("random.txt", "utf-8", function(error, data){
 
-//         //Check for errors and log if error is encountered
-//         if (error) {
-//             return console.log(error);
-//         }
-
-//         displaySpotify(data);
-//     })
-// }
+        //Check for errors and log if error is encountered
+        if (error) {
+            return console.log(error);
+        }
+        
+        var random = data;
+        displaySpotify(random);
+    });
+}
